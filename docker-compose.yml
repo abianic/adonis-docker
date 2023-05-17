@@ -48,3 +48,22 @@ services:
       - adonisnet
     depends_on:
       - adonis-db
+
+  adonis-front:
+    image: adonis-front-dev:1.0.0
+    container_name: adonis-front_dev
+    build:
+      context: ./app/
+      target: development
+      dockerfile: Dockerfile
+    command: dev
+    restart: unless-stopped
+    volumes:
+      - ./app/:/usr/src/app
+    env_file: .env
+    ports:
+      - "8080:3000"
+    networks:
+      - adonisnet
+    depends_on:
+      - adonys-api
