@@ -1,0 +1,50 @@
+version: "3.8"
+
+volumes:
+  database-data:
+
+networks:
+  adonisnet:
+    driver: bridge
+
+services:
+  adonis-db:
+    container_name: adonis-db
+    image: postgres
+    restart: always
+    volumes:
+      - database-data:/var/lib/postgresql/data/
+    env_file: .env
+    environment:
+      POSTGRES_USER: adonisusr
+      POSTGRES_PASSWORD: adonispass
+      POSTGRES_DB: adonis
+    ports:
+      - 5432:5432
+    networks:
+      - adonisnet
+
+  adonys-api:
+    image: adonys-api-dev:1.0.0
+    container_name: adonys-api_dev
+    build:
+      context: ./api/
+      target: development
+      dockerfile: Dockerfile
+    command: start:dev
+    restart: unless-stopped
+    volumes:
+      - ./api/:/usr/src/app
+    env_file: .env
+    environment:
+      - POSTGRES_DB=$ADONIS_API_POSTGRES_DB
+      - POSTGRES_PORT=$ADONIS_API_POSTGRES_PORT
+      - POSTGRES_PASSWORD=$ADONIS_API_POSTGRES_PASSWORD
+      - POSTGRES_USER=$ADONIS_API_POSTGRES_USER
+      - POSTGRES_HOST=$ADONIS_API_POSTGRES_HOST
+    ports:
+      - 8081:3000
+    networks:
+      - adonisnet
+    depends_on:
+      - adonis-db
