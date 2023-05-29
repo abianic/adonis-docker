@@ -28,7 +28,7 @@ services:
     image: adonys-api-dev:1.0.0
     container_name: adonys-api_dev
     build:
-      context: ./api/
+      context: ../adonis-api/
       target: development
       dockerfile: Dockerfile
     command: start:dev
@@ -55,7 +55,7 @@ services:
     image: adonis-front-dev:1.0.0
     container_name: adonis-front_dev
     build:
-      context: ./app/
+      context: ../adonis-front/
       target: development
       dockerfile: Dockerfile
     command: dev
